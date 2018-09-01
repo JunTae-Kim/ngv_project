@@ -1,5 +1,12 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
+
+
+#from PyQt5.QtWidgets import *
+#from PyQt5.QtCore import *
+#from PyQt5.QtGui import *
+#from PyQt5 import *
+
 from pyfirmata import Arduino, util
 from socket import *
 from select import *

@@ -36,8 +36,8 @@ int main()
 	int edge_down_th = 150;
 	int edge_up_th = 250;
 
-	//int mask1 = 40;
-	//int mask2 = 25;
+	int mask1 = 40;
+	int mask2 = 25;
 	int traffic_flag = 0;
 
 	int t_point_x = 0;				// before steering angle
@@ -65,16 +65,16 @@ int main()
 		video >> frame;
 
 		cvtColor(frame, grayimg, CV_BGR2GRAY);		//transform grayscale
-		cvtColor(frame, hsvimg, CV_BGR2HSV);		//transform hsv color space
+		//cvtColor(frame, hsvimg, CV_BGR2HSV);		//transform hsv color space
 		binaryfilter(grayimg);	
 		GaussianBlur(grayimg, blurimg, Size(3,3), 0, 0);
 		Canny(blurimg, edgeimg, edge_down_th, edge_up_th);
 		roi(frame, edgeimg, roi1_x1, roi1_y1, roi1_x2, roi1_y2, 1);
-		roi(frame, hsvimg, roi2_x1, roi2_y1, roi2_x2, roi2_y2, 3);
-		//morphology(edgeimg, morimg, mask1, mask2);
-		t_point_x = hough(frame, edgeimg, lines, hough_threshold, t_point_x);
+		//roi(frame, hsvimg, roi2_x1, roi2_y1, roi2_x2, roi2_y2, 3);
+		morphology(edgeimg, morimg, mask1, mask2);
+		t_point_x = hough(frame, morimg, lines, hough_threshold, t_point_x);
 		//hough(frame, morimg, lines, hough_threshold);
-		traffic_flag = colordetect(frame, hsvimg, traffic_flag);
+		//traffic_flag = colordetect(frame, hsvimg, traffic_flag);
 
 		rectangle(frame, rt1, Scalar(100,155,50),2);		//line roi
 		rectangle(frame, rt2, Scalar(200,55,50),2);		//traffic light roi
@@ -353,6 +353,7 @@ int hough(Mat frame, Mat img, vector<Vec2f> lines, int threshold, int t_point_x)
 	}
 }
 
+/*
 int colordetect(Mat frame, Mat hsv, int flag)
 {
 	int max1 = 500, max2 = 500, max3 = 500;
@@ -464,27 +465,28 @@ int colordetect(Mat frame, Mat hsv, int flag)
 	//printf("flag = %d", flag);
 	return flag;
 }
+*/
 
 void steering(Mat frame, int angle)
 {
     string text;
 
-    if (angle < -40)
+    if (angle < -36)
     {
         text = "left4";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >= -40 && angle < -30)
+    else if (angle >= -36 && angle < -26)
     {
         text = "left3";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >= -30 && angle < -20)
+    else if (angle >= -26 && angle < -18)
     {
         text = "left2";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >=-20 && angle < -10)
+    else if (angle >=-18 && angle < -10)
     {
         text = "left1";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
@@ -494,22 +496,22 @@ void steering(Mat frame, int angle)
         text = "straight";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >= 10 && angle < 20)
+    else if (angle >= 10 && angle < 18)
     {
         text = "right1";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >= 20 && angle < 30)
+    else if (angle >= 18 && angle < 26)
     {
         text = "right2";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >= 30 && angle < 40)
+    else if (angle >= 26 && angle < 36)
     {
         text = "right3";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
     }
-    else if (angle >= 40)
+    else if (angle >= 36)
     {
         text = "right4";
         putText(frame, text, Point(WIDTH/2+40, HEIGHT-10), 1, 1, Scalar(0,0,255));
